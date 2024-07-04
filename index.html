@@ -62,7 +62,7 @@
             
             totalExpense += expense.amount;
 
-            totalExpenseHeaderElement.textContent = `Your total expense is : ${totalExpense} rupees.`;
+            renderTotalExpense(totalExpense);
             
             //update lists and render
             
@@ -70,16 +70,7 @@
             
             mutableListOfExpenses.push(expense);
 
-            const joinedListOfExpenses = mutableListOfExpenses.map(expense => 
-                `<div>
-                    
-                    amount: ${expense.amount} ::: desc: ${expense.description}::: on ${expense.moment.toLocaleString("en-US", {year:"numeric", month:"long", day:"numeric"})}
-                    
-                    <button onClick = "deleteListItem(${expense.moment.valueOf()})">X</button>
-                
-                </div>`).join("");
-
-            renderedListOfExpensesElement.innerHTML = joinedListOfExpenses;
+            renderListItems(mutableListOfExpenses);
             
         }
 
@@ -89,24 +80,46 @@
 
             totalExpense -= mutableListOfExpenses.find(expense => expense.moment.valueOf() === dateValue).amount;
 
-            totalExpenseHeaderElement.textContent = `Your total expense is : ${totalExpense} rupees.`;
+            renderTotalExpense(totalExpense);
 
             const filteredArray = mutableListOfExpenses.filter(expense => expense.moment.valueOf() !== dateValue);
 
-            const joinedListOfExpenses = filteredArray.map(expense => 
+            renderListItems(filteredArray);
+
+            mutableListOfExpenses = [...filteredArray];
+
+        }
+
+        //to obtain date from date obj
+
+        function getDateString(moment) {
+
+            return moment.toLocaleString("en-US", {year:"numeric", month:"long", day:"numeric"});
+
+        }
+
+        //View Layer
+
+        function renderTotalExpense(finalTotalExpense) {
+            
+            totalExpenseHeaderElement.textContent = `Your total expense is : ${finalTotalExpense} rupees.`;
+
+        }
+
+        function renderListItems (listItems) {
+            
+            renderedListOfExpensesElement.innerHTML = listItems.map(expense => 
                 `<div>
                     
-                    amount: ${expense.amount} ::: desc: ${expense.description}::: on ${expense.moment.toLocaleString("en-US", {year:"numeric", month:"long", day:"numeric"})}
+                    amount: ${expense.amount} ::: desc: ${expense.description}::: on ${getDateString(expense.moment)}
                     
                     <button onClick = "deleteListItem(${expense.moment.valueOf()})">X</button>
                 
                 </div>`).join("");
 
-            renderedListOfExpensesElement.innerHTML = joinedListOfExpenses;
-
-            mutableListOfExpenses = [...filteredArray];
-
         }
+
+        //handler for add button click
 
         addExpenseButtonElement.addEventListener("click", addExpenseToTotal, false);
         
