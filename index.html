@@ -36,7 +36,7 @@
                     
             </div>
                     
-            <span class="navbar-brand text-light mb-0 me-0 h1">Total:45</span> 
+            <span id="totalExpenseNav" class="navbar-brand text-light mb-0 me-0 h1">Total: 0</span> 
                 
         </div>             
     </nav>
@@ -99,6 +99,8 @@
         //Access the ref of render elements of html
 
         const totalExpenseHeaderElement = document.querySelector("#totalExpenseHeader");
+
+        const totalExpenseNavElement = document.querySelector("#totalExpenseNav");
 
         const renderedListOfExpensesElement = document.querySelector("#renderedListOfExpenses");
 
@@ -171,30 +173,32 @@
             
             totalExpenseHeaderElement.textContent = `Your total expense is : ${finalTotalExpense} rupees.`;
 
+            totalExpenseNavElement.textContent = `Total: ${finalTotalExpense}`;
+
         }
 
         function renderListItems (listItems) {
             
-            renderedListOfExpensesElement.innerHTML = listItems.map(expense => 
+            renderedListOfExpensesElement.innerHTML = listItems.map(({amount, description, moment}) => 
                 `<li class="list-group-item d-flex justify-content-between align-items-center">
                 
                     <div class="d-flex flex-column">
                     
-                        ${expense.description}
+                        ${description}
                     
                         <small class="text-body-secondary">
-                        ${getDateString(expense.moment)}
+                        ${getDateString(moment)}
                         </small>
 
                     </div>
 
                     <div>
                     
-                        <span class="mx-3">₹${expense.amount}</span>
+                        <span class="mx-3">₹${amount}</span>
                     
                         <button 
                             class="btn btn-outline-danger"
-                            onClick = "deleteListItem(${expense.moment.valueOf()})">
+                            onClick = "deleteListItem(${moment.valueOf()})">
                         
                             <i class="fas fa-trash"></i>
 
@@ -206,7 +210,7 @@
 
         }
 
-        //handler for add button click
+        //handler for "add" button click
 
         addExpenseButtonElement.addEventListener("click", addExpenseToTotal, false);
         
