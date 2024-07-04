@@ -72,7 +72,7 @@
                     aria-describedby="addExpenseButton">
                 
                 <button 
-                    class="btn btn-secondary"
+                    class="btn btn-outline-primary"
                     type="button"
                     id="addExpenseButton">Add</button>
 
@@ -82,9 +82,11 @@
 
         <h4 id="totalExpenseHeader" class="align-self-center"></h4>
 
+        <ul id="renderedListOfExpenses" class="list-group"></ul>
+
     </div>
 
-    <ul id="renderedListOfExpenses" class="list-group"></ul>
+    
     
     <script>
         
@@ -180,7 +182,7 @@
         function renderListItems (listItems) {
             
             renderedListOfExpensesElement.innerHTML = listItems.map(({amount, description, moment}) => 
-                `<li class="list-group-item d-flex justify-content-between align-items-center">
+                `<li class="list-group-item d-flex justify-content-between align-items-center bg-body-tertiary">
                 
                     <div class="d-flex flex-column">
                     
