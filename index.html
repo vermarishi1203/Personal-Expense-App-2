@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Expense App 2</title>
+</head>
+<body>
+    
+    <h1>Personal Expense App</h1>
+    
+    <input id="expenseAmount" type="text" placeholder="Amount spent">
+    
+    <input id="expenseDescription" type="text" placeholder="Spent On">
+    
+    <button id="addExpenseButton" type="button" >Add</button>
+
+    <h1 id="totalExpenseHeader"></h1>
+
+    <div id="renderedListOfExpenses"></div>
+    
+    <script>
+        
+        //Access the ref of the input fields and the button
+
+        const expenseAmountElement = document.querySelector("#expenseAmount");
+        
+        const expenseDescriptionElement = document.querySelector("#expenseDescription");
+        
+        const addExpenseButtonElement = document.querySelector("#addExpenseButton");
+
+        //Access the ref of render elements of html
+
+        const totalExpenseHeaderElement = document.querySelector("#totalExpenseHeader");
+
+        const renderedListOfExpensesElement = document.querySelector("#renderedListOfExpenses");
+
+        //Declare variables to store total expense and list of expenses
+        
+        let totalExpense = 0;
+        const listOfExpenses = [];
+        let mutableListOfExpenses = [];
+
+        //Take the input value from input fields on the click of the button and render the total amount spent and the list of expenses
+        
+        function addExpenseToTotal() {
+            
+            //obj to store input values
+
+            const expense = {
+                amount: parseFloat(expenseAmountElement.value), description: expenseDescriptionElement.value,
+                moment: new Date()
+            };
+
+            //clear input fields after submit
+            
+            expenseAmountElement.value="";
+            
+            expenseDescriptionElement.value="";
+            
+            //update total expense and render
+            
+            totalExpense += expense.amount;
+
+            totalExpenseHeaderElement.textContent = `Your total expense is : ${totalExpense} rupees.`;
+            
+            //update lists and render
+            
+            listOfExpenses.push(expense);
+            
+            mutableListOfExpenses.push(expense);
+
+            const joinedListOfExpenses = mutableListOfExpenses.map(expense => 
+                `<div>
+                    
+                    amount: ${expense.amount} ::: desc: ${expense.description}::: on ${expense.moment.toLocaleString("en-US", {year:"numeric", month:"long", day:"numeric"})}
+                    
+                    <button onClick = "deleteListItem(${expense.moment.valueOf()})">X</button>
+                
+                </div>`).join("");
+
+            renderedListOfExpensesElement.innerHTML = joinedListOfExpenses;
+            
+        }
+
+        //Delete an item and update list and total expense ; and re-render the list and total expense
+
+        function deleteListItem(dateValue) {
+
+            totalExpense -= mutableListOfExpenses.find(expense => expense.moment.valueOf() === dateValue).amount;
+
+            totalExpenseHeaderElement.textContent = `Your total expense is : ${totalExpense} rupees.`;
+
+            const filteredArray = mutableListOfExpenses.filter(expense => expense.moment.valueOf() !== dateValue);
+
+            const joinedListOfExpenses = filteredArray.map(expense => 
+                `<div>
+                    
+                    amount: ${expense.amount} ::: desc: ${expense.description}::: on ${expense.moment.toLocaleString("en-US", {year:"numeric", month:"long", day:"numeric"})}
+                    
+                    <button onClick = "deleteListItem(${expense.moment.valueOf()})">X</button>
+                
+                </div>`).join("");
+
+            renderedListOfExpensesElement.innerHTML = joinedListOfExpenses;
+
+            mutableListOfExpenses = [...filteredArray];
+
+        }
+
+        addExpenseButtonElement.addEventListener("click", addExpenseToTotal, false);
+        
+    </script>
+</body>
+</html>
